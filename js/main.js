@@ -1,40 +1,35 @@
-const API = 'http://localhost:8000/words';
-
 let inputText = $('.inputText');
 let outputText = $('.outputText');
 outputText.prop('disabled', true);
 let buttonSub = $('.button-sub');
 
-async function render(word) {
-  console.log(word);
-  try {
-    let result = await fetch(`${API}?q=${word}`);
-    let data = await result.json();
-    console.log(data);
-    if (data.length === 0) {
-      outputText.val('не найдено');
-    } else {
-      data.forEach((w) => {
-        w.name === word
-          ? outputText.val(w.transcript)
-          : outputText.val('не найдено');
-      });
-    }
-  } catch (error) {
-    console.log(error);
-  }
+
+const array = [
+  { name: 'США', transcript: 'сэ-шэ-+а' },
+  { name: 'СШ', transcript: 'сэ-ш+э' },
+  { name: 'ГКНБ', transcript: 'гэ-кэ-эн-б+э' },
+  { name: 'ЖКХ', transcript: 'жэ-кэ-х+а' },
+  { name: 'СССР', transcript: 'эс-эс-эс+эр' },
+  { name: 'НТВ', transcript: 'эн-тэ-в+э' },
+  { name: 'ФБР', transcript: 'фэ-бэ-+эр' },
+];
+
+function render(word) { 
+  array.every(v => { 
+    if(word.toLowerCase() == v.name.toLocaleLowerCase()){ 
+      outputText.val(v.transcript) 
+      return false 
+    }else{ 
+      outputText.val("транскрипция не найдена") 
+      return true; 
+    } 
+  }) 
 }
 
 buttonSub.on('click', (e) => {
   if (inputText.val() == '') {
-    alert('у вас пустой инпут');
+    alert('заполните поле!');
   } else {
     render(inputText.val());
   }
 });
-
-//  { "ГКНБ": "гэ-кэ-эн-б+э" },
-//  { "ЖКХ": "жэ-кэ-х+а" },
-//  { "СССР": "эс-эс-эс+эр" },
-//  { "НТВ": "эн-тэ-в+э" },
-//  { "ФБР": "фэ-бэ-+эр" }
